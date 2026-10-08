@@ -4,7 +4,9 @@
   "private": true,
   "description": "Verifiable QR infrastructure for documents, credentials and contracts.",
   "type": "module",
-  "engines": { "node": ">=20.19" },
+  "engines": {
+    "node": ">=20.19"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "vitest run",
@@ -12,7 +14,9 @@
     "cli": "tsx cli/iqr.ts",
     "dev:web": "vite --config apps/verifier-web/vite.config.ts",
     "build:web": "vite build --config apps/verifier-web/vite.config.ts",
-    "preview:web": "vite preview --config apps/verifier-web/vite.config.ts"
+    "preview:web": "vite preview --config apps/verifier-web/vite.config.ts",
+    "dev:analyzer": "vite --config apps/analyzer-web/vite.config.ts",
+    "build:analyzer": "vite build --config apps/analyzer-web/vite.config.ts"
   },
   "dependencies": {
     "@noble/ed25519": "^3.2.0",
