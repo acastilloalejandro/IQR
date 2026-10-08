@@ -1,0 +1,13 @@
+{
+  "id": "contract-demo-001",
+  "type": "ContractCredential",
+  "issuer": "did:example:issuer",
+  "documentHash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "version": "1.0",
+  "issuedAt": "2026-10-08T00:00:00Z",
+  "status": "valid",
+  "proof": {
+    "type": "ExampleProof",
+    "note": "Demonstration vector; not a production signature."
+  }
+}
