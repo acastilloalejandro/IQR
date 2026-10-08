@@ -2,7 +2,10 @@ import { canonicalize } from "./canonical.js";
 import { utf8 } from "./encoding.js";
 
 export async function sha256(bytes: Uint8Array): Promise<Uint8Array> {
-  return new Uint8Array(await crypto.subtle.digest("SHA-256", bytes));
+  const input = new Uint8Array(bytes.byteLength);
+  input.set(bytes);
+  const digest = await crypto.subtle.digest("SHA-256", input.buffer);
+  return new Uint8Array(digest);
 }
 
 export async function sha256Hex(bytes: Uint8Array): Promise<string> {
