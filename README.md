@@ -2,70 +2,106 @@
 
 **IQR — Intelligent / Integrity QR infrastructure**
 
-A standards-oriented foundation for verifiable QR codes that connect physical documents and objects with trustworthy digital verification.
+A reference implementation for verifiable QR codes connecting physical documents and objects to trustworthy digital verification.
 
-## Vision
+## What is implemented
 
-IQR treats the QR code as a **carrier**, not as the trust system itself:
+IQR now provides:
 
-`physical artifact → QR/NFC → resolver → credential → cryptographic verification → status → action`
-
-The design prioritizes interoperability, privacy, integrity, offline capability, and cryptographic agility.
+- SHA-256 document hashing.
+- Deterministic canonical JSON for signing.
+- Ed25519 signing and verification.
+- Trusted issuer registry support.
+- Development-only inline public-key verification.
+- Online HTTPS QR payloads.
+- Offline compact QR payloads.
+- SVG and Data URI QR generation.
+- HTTP and memory resolvers.
+- Expiry, audience and nonce validation.
+- External status-provider integration.
+- Structured verification results.
+- TypeScript SDK.
+- CLI reference implementation.
+- Browser verifier.
+- Automated build, test and web-build CI.
 
 ## Architecture
 
 ```
-Document / Object
+physical document
       │
-      ├── documentHash (SHA-256)
+      ├── SHA-256 hash
       ├── issuer
-      ├── version
-      ├── timestamps
-      └── credential / proof
-             │
-             ▼
-       QR / NFC carrier
-             │
-             ▼
-          Resolver
-        ┌────┼────┐
-        ▼    ▼    ▼
-      Issuer Hash Status
-        │    │    │
-        └────┼────┘
-             ▼
-        Verification
-             │
-             ▼
-   Authentic · Intact · Current
+      ├── version / time
+      └── credential + proof
+               │
+               ▼
+          QR / NFC carrier
+               │
+       ┌───────┴────────┐
+       ▼                ▼
+   online URL       offline payload
+       │                │
+       ▼                ▼
+     resolver       local parser
+       │                │
+       └───────┬────────┘
+               ▼
+        cryptographic check
+               │
+        issuer / integrity
+        status / expiry
+        audience / nonce
+               │
+               ▼
+        structured result
+               │
+               ▼
+             action
 ```
 
-## Compatibility targets
+## Quick start
 
-- W3C Verifiable Credentials
-- W3C Data Integrity
-- Bitstring Status List
-- OpenID for Verifiable Credentials
-- CBOR / COSE for compact payloads
-- ISO/IEC 18004 QR Code
-- NFC / ISO 14443
-- HTTPS and standard web clients
+`npm install`
 
-IQR should not become a competing closed protocol. It defines a practical profile and implementation architecture around open standards.
+`npm run build`
 
-## Security principles
+`npm test`
 
-1. Never place secrets or unnecessary personal data in a QR.
-2. Treat the QR as untrusted input until verification succeeds.
-3. Verify issuer authenticity and document integrity independently.
-4. Support revocation / suspension / expiry.
-5. Prevent replay where an operation is security-sensitive.
-6. Keep cryptographic algorithms replaceable.
-7. Prefer selective disclosure where the credential model supports it.
-8. Provide clear failure states instead of a binary “looks legitimate” UI.
+Create a demo credential:
+
+`npm run cli -- create-demo demo-credential.json`
+
+Generate an SVG QR:
+
+`npm run cli -- qr-offline demo-credential.json iqr.svg`
+
+Verify a credential:
+
+`npm run cli -- verify demo-credential.json`
+
+Launch the browser verifier:
+
+`npm run dev:web`
+
+## Design rule
+
+The QR is a **carrier**, not the trust root.
+
+IQR deliberately keeps trust policy, cryptographic verification, document integrity and status resolution as separate layers.
+
+## Production boundary
+
+The current offline carrier is compact JSON. It is not presented as a COSE/CBOR implementation.
+
+Inline public keys are for demonstrations and test vectors. Production deployments should pin issuer keys through a controlled trust registry.
+
+A production resolver should also implement a real revocation or suspension source and explicit privacy/logging policy.
+
+## Standards direction
+
+The architecture is designed to map cleanly toward W3C Verifiable Credentials, W3C Data Integrity, Bitstring Status List, OpenID4VC, CBOR/COSE, QR Code and NFC profiles without creating a competing cryptographic standard.
 
 ## Repository status
 
-Early architecture / reference implementation.
-
-See `docs/` and `spec/` for the evolving profile.
+**v0.2.0 — executable reference implementation.**
