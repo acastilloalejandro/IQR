@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "IQR Verification Result",
+  "type": "object",
+  "required": ["status", "checks"],
+  "properties": {
+    "status": {"type": "string", "enum": ["verified", "invalid", "revoked", "suspended", "expired", "unknown"]},
+    "checks": {
+      "type": "object",
+      "required": ["issuer", "integrity", "status"],
+      "properties": {
+        "issuer": {"type": "boolean"},
+        "integrity": {"type": "boolean"},
+        "status": {"type": "boolean"},
+        "expiry": {"type": "boolean"}
+      },
+      "additionalProperties": true
+    },
+    "reasons": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}
